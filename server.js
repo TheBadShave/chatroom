@@ -1,21 +1,17 @@
-const express = require('express');
-const http = require('http');
-const WebSocket = require('ws');
+var ws_uri = "ws://chatroom-c5j33etb7-thebadshave-gmailcom.vercel.app/:9600";
+var websocket = new WebSocket(ws_uri);
 
-const port = 6969;
-const server = http.createServer(express);
-const wss = new WebSocket.Server({ server })
+// on websocket open:
+websocket.onopen = function(event) {
+	MessageAdd('<div class="message green">You have entered the chat room.</div>');
+};
 
-wss.on('connection', function connection(ws) {
-  ws.on('message', function incoming(data) {
-    wss.clients.forEach(function each(client) {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(data);
-      }
-    })
-  })
-})
+// on websocket close:
+websocket.onclose = function(event) {
+	MessageAdd('<div class="message blue">You have been disconnected.</div>');
+};
 
-server.listen(port, function() {
-  console.log(`Server is listening on ${port}!`)
-})
+// on websocket error:
+websocket.onerror = function(event) {
+	MessageAdd('<div class="message red">Connection to chat failed.</div>');
+};
