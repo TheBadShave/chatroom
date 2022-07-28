@@ -23,7 +23,7 @@
         ws.close();
       }
 
-      ws = new WebSocket('ws://localhost:6969');
+      ws = new WebSocket('ws://https://chatroom-zeta.vercel.app/:9600');
       ws.onopen = () => {
         console.log('Connection opened!');
       }
