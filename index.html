@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AXOLOTLCHAT</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>AXOLOTLCHAT (v0.2)</h1>
+
+<div class="ChatContainer">
+    <pre id="ChatBox" class="ChatBox">Welcome to AxoltolCHAT </pre>
+    <input id="MessageField" class="MessageField" placeholder="Type, Send With Enter">
+</div>
+
+<script>
+    const ws = new WebSocket("ws://localhost:8082");
+    const ChatBox = document.querySelector('#ChatBox');
+    const MessageField= document.querySelector('#MessageField');
+
+    ws.addEventListener("open", () => {
+        console.log("This client has connected");
+    });
+
+    function showMessage(message){
+        ChatBox.textContent += `\n${message}`;
+        ChatBox.scrollHeight = message.scrollHeight;
+    }
+
+    document.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            if(!ws) {
+                console.log("Message Failed");
+                return;
+            }
+
+            ws.send(MessageField.value);
+            console.log("Message Sent");
+            MessageField.value = '';
+        }
+    });
+
+    ws.addEventListener('message', (event) => {
+
+    event.data.text().then(newLine => showMessage(newLine));
+
+    //showMessage(newLine); 
+
+    });
+    
+</script>
+
+</body>
+</html>
